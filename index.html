@@ -906,7 +906,7 @@
 
 <div class="header">
   <div class="header-logo">TREINO<span>.app</span></div>
-  <div style="position:absolute;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text3);font-family:'Barlow Condensed',sans-serif;top:22px;">v1.3</div>
+  <div style="position:absolute;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text3);font-family:'Barlow Condensed',sans-serif;top:22px;">v1.4</div>
   <div class="header-actions">
     <button class="icon-btn" onclick="openHistoryPage()" title="Histórico">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
@@ -1566,46 +1566,47 @@ function showToast(msg) {
 }
 
 // ===== VIDEO LOGIC =====
-const YT_TERMS = {
-  'supino inclinado': 'incline bench press how to',
-  'crucifixo inclinado': 'incline dumbbell fly how to',
-  'desenvolvimento militar': 'overhead press how to',
-  'elevacao lateral': 'lateral raise how to',
-  'paralelas': 'chest dips how to',
-  'prancha abdominal': 'plank exercise how to',
-  'vacuum abdominal': 'stomach vacuum exercise',
-  'agachamento livre': 'barbell squat how to',
-  'levantamento terra romeno': 'romanian deadlift how to',
-  'leg press': 'leg press machine how to',
-  'afundo': 'lunge exercise how to',
-  'hip thrust': 'hip thrust glutes how to',
-  'hanging leg raise': 'hanging leg raise how to',
-  'barra fixa': 'pull up how to',
-  'remada curvada': 'bent over row how to',
-  'face pull': 'face pull cable how to',
-  'rosca direta': 'barbell curl how to',
-  'rosca martelo': 'hammer curl how to',
-  'triceps corda': 'tricep rope pushdown how to',
-  'ab wheel': 'ab wheel rollout how to',
-  'desenvolvimento com halter': 'dumbbell shoulder press how to',
-  'crucifixo maquina': 'cable chest fly how to',
-  'supino reto': 'flat bench press how to',
-  'farmer walk': 'farmer walk exercise how to',
-  'prancha lateral': 'side plank how to',
-  'dead bug': 'dead bug exercise how to',
-  'glute bridge': 'glute bridge how to',
+// Hardcoded YouTube video IDs - reliable, no API needed
+const YT_IDS = {
+  'supino inclinado':            '2Gy8JCBu0rM',
+  'crucifixo inclinado':         'QNcLnOEDsNw',
+  'desenvolvimento militar':     'B-aVuyhvLHU',
+  'elevacao lateral':            'XPPfnSEATJA',
+  'paralelas':                   'dX_nSOOJIsE',
+  'prancha abdominal':           'ASdvN_XEl_c',
+  'vacuum abdominal':            'bXHMqNOvCN4',
+  'agachamento livre':           'ultWZbUMPL8',
+  'levantamento terra romeno':   'jEy_czb3RKA',
+  'leg press':                   'IZxyjW7MPJQ',
+  'afundo':                      'QOVaHwm-Q6U',
+  'hip thrust':                  'SEdqd1n0cvg',
+  'hanging leg raise':           'Pr1ieGZ5ATQ',
+  'barra fixa':                  'eGo4IYlbE5g',
+  'remada curvada':              'vT2GjY_Umpw',
+  'face pull':                   'HSoHeSjvIdI',
+  'rosca direta':                'ykJmrZ5v0Oo',
+  'rosca martelo':               'TwD-YGVP4Bk',
+  'triceps corda':               'vB5OHsJ3EME',
+  'ab wheel':                    'D-AJyHr4nFU',
+  'desenvolvimento com halter':  'qEwKCR5JCog',
+  'crucifixo maquina':           'pYcpY20QaE8',
+  'supino reto':                 'vcBig73ojpE',
+  'farmer walk':                 'Fkzk_RqlYig',
+  'prancha lateral':             'K-CrEi0ymMg',
+  'dead bug':                    'g_BYB0R-4Ws',
+  'glute bridge':                'OUgsJ8-Vi0E',
 };
 
 function normalizeStr(s) {
-  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
 }
 
-function getYTQuery(exName) {
+function getYTId(exName) {
   const norm = normalizeStr(exName);
-  for (const [pt, query] of Object.entries(YT_TERMS)) {
-    if (norm.includes(pt)) return query;
+  for (const [pt, id] of Object.entries(YT_IDS)) {
+    if (norm.includes(pt)) return id;
   }
-  return exName + ' exercise how to';
+  return null;
 }
 
 const videoLoaded = {};
@@ -1615,21 +1616,18 @@ function loadVideo(eid, exName) {
   videoLoaded[eid] = true;
   const wrap = document.getElementById('video-wrap-' + eid);
   if (!wrap) return;
-  const query = getYTQuery(exName);
+  const ytId = getYTId(exName);
+  if (!ytId) {
+    wrap.innerHTML = '<div class="video-placeholder" style="cursor:default"><div style="font-size:32px">🏋️</div><div class="video-placeholder-label">Vídeo não cadastrado</div><div class="video-placeholder-sub">Exercício novo — sem vídeo ainda</div></div>';
+    return;
+  }
   const iframe = document.createElement('iframe');
-  iframe.src = 'https://www.youtube.com/embed?listType=search&list=' + encodeURIComponent(query) + '&autoplay=1&rel=0&modestbranding=1';
+  iframe.src = 'https://www.youtube.com/embed/' + ytId + '?autoplay=1&rel=0&modestbranding=1';
   iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
   iframe.allowFullscreen = true;
   wrap.innerHTML = '';
   wrap.appendChild(iframe);
 }
-function gifPrev(eid) {
-  if (!gifCache[eid]) return;
-  const c = gifCache[eid];
-  c.idx = (c.idx - 1 + c.gifs.length) % c.gifs.length;
-  renderGif(eid);
-}
-
 // ===== INIT =====
 renderHome();
 </script>

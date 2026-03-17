@@ -1641,25 +1641,38 @@ function getSearchTerm(exName) {
 async function loadGif(eid, exName) {
   if (gifCache[eid]) { renderGif(eid); return; }
   const term = getSearchTerm(exName);
-  const url = `https://exercisedb.p.rapidapi.com/exercises/name/${encodeURIComponent(term)}?limit=5&offset=0`;
-  // Try ExerciseDB open instance first
-  const openUrl = `https://exercisedb-api.vercel.app/api/v2/exercises/name/${encodeURIComponent(term)}?limit=5`;
   try {
-    const res = await fetch(openUrl);
-    if (res.ok) {
-      const data = await res.json();
-      const exercises = data.exercises || data || [];
-      const gifs = exercises.filter(e => e.gifUrl).map(e => ({ url: e.gifUrl, name: e.name }));
-      if (gifs.length > 0) {
-        gifCache[eid] = { gifs, idx: 0 };
-        renderGif(eid);
-        return;
-      }
-    }
+    const gifs = await fetchFromWger(term);
+    if (gifs && gifs.length > 0) { gifCache[eid] = { gifs, idx: 0 }; renderGif(eid); return; }
   } catch {}
-  // Fallback: show placeholder
+  try {
+    const gifs = await fetchFromGiphy(term);
+    if (gifs && gifs.length > 0) { gifCache[eid] = { gifs, idx: 0 }; renderGif(eid); return; }
+  } catch {}
   gifCache[eid] = { gifs: [], idx: 0 };
   showGifFallback(eid, exName);
+}
+
+async function fetchFromWger(term) {
+  const r = await fetch('https://wger.de/api/v2/exercise/search/?term=' + encodeURIComponent(term) + '&language=english&format=json');
+  if (!r.ok) return [];
+  const d = await r.json();
+  const ids = (d.suggestions || []).slice(0,3).map(s => s.data && s.data.base_id).filter(Boolean);
+  const gifs = [];
+  for (const id of ids) {
+    const ir = await fetch('https://wger.de/api/v2/exerciseimage/?exercise_base=' + id + '&format=json');
+    if (!ir.ok) continue;
+    const im = await ir.json();
+    (im.results || []).filter(i => i.image).forEach(i => gifs.push({ url: 'https://wger.de' + i.image, name: term }));
+  }
+  return gifs;
+}
+
+async function fetchFromGiphy(term) {
+  const r = await fetch('https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=' + encodeURIComponent(term + ' exercise') + '&limit=3&rating=g');
+  if (!r.ok) return [];
+  const d = await r.json();
+  return (d.data || []).map(g => ({ url: g.images && g.images.fixed_height && g.images.fixed_height.url, name: g.title })).filter(g => g.url);
 }
 
 function renderGif(eid) {

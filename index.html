@@ -381,76 +381,58 @@
   }
   .exercise-detail.open { display: block; }
 
-  /* GIF */
-  .gif-wrap {
+  /* VIDEO */
+  .video-wrap {
     margin-top: 14px;
     border-radius: 12px;
     overflow: hidden;
     background: var(--surface2);
     position: relative;
-    min-height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .gif-wrap img {
+    aspect-ratio: 16/9;
     width: 100%;
-    max-height: 240px;
-    object-fit: cover;
-    display: block;
-    border-radius: 12px;
   }
-  .gif-loading {
+  .video-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 12px;
+    display: block;
+  }
+  .video-placeholder {
     position: absolute;
     inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    color: var(--text2);
-    font-size: 12px;
-    font-weight: 600;
+    gap: 10px;
+    cursor: pointer;
+    border-radius: 12px;
+    background: var(--surface2);
+    transition: background 0.2s;
+  }
+  .video-placeholder:active { background: var(--surface); }
+  .video-play-btn {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    color: #0a0a0f;
+    box-shadow: 0 4px 20px rgba(232,255,71,0.4);
+  }
+  .video-placeholder-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
     letter-spacing: 1px;
+    color: var(--text2);
     text-transform: uppercase;
   }
-  .gif-spinner {
-    width: 28px; height: 28px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent2);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .gif-label {
-    font-size: 10px;
-    color: var(--text3);
-    text-align: center;
-    padding: 4px 8px 0;
-    letter-spacing: 0.5px;
-  }
-  .gif-nav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 6px;
-  }
-  .gif-nav-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text2);
-    border-radius: 8px;
-    padding: 4px 12px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .gif-nav-btn:active { background: var(--surface); }
-  .gif-nav-count {
+  .video-placeholder-sub {
     font-size: 11px;
-    color: var(--text2);
-    font-weight: 600;
+    color: var(--text3);
+    margin-top: -6px;
   }
 
   .load-row {
@@ -924,6 +906,7 @@
 
 <div class="header">
   <div class="header-logo">TREINO<span>.app</span></div>
+  <div style="position:absolute;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text3);font-family:'Barlow Condensed',sans-serif;top:22px;">v1.3</div>
   <div class="header-actions">
     <button class="icon-btn" onclick="openHistoryPage()" title="Histórico">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
@@ -1328,17 +1311,12 @@ function renderExerciseList(w) {
         </div>
       </div>
       <div class="exercise-detail" id="detail-${ex.id}">
-        <div class="gif-wrap" id="gif-wrap-${ex.id}">
-          <div class="gif-loading" id="gif-loading-${ex.id}">
-            <div class="gif-spinner"></div>
-            <span>Carregando...</span>
+        <div class="video-wrap" id="video-wrap-${ex.id}">
+          <div class="video-placeholder" onclick="loadVideo('${ex.id}', this.dataset.name)" data-name="${ex.name}">
+            <div class="video-play-btn">&#9654;</div>
+            <div class="video-placeholder-label">Ver demonstração</div>
+            <div class="video-placeholder-sub">${ex.name}</div>
           </div>
-        </div>
-        <div class="gif-label" id="gif-label-${ex.id}"></div>
-        <div class="gif-nav" id="gif-nav-${ex.id}" style="display:none">
-          <button class="gif-nav-btn" onclick="gifPrev('${ex.id}')">‹</button>
-          <span class="gif-nav-count" id="gif-count-${ex.id}"></span>
-          <button class="gif-nav-btn" onclick="gifNext('${ex.id}')">›</button>
         </div>
         <div class="load-row">
           <span class="load-label">Carga:</span>
@@ -1359,16 +1337,7 @@ function renderExerciseList(w) {
 function toggleDetail(eid) {
   const d = document.getElementById('detail-' + eid);
   if (!d) return;
-  const wasOpen = d.classList.contains('open');
   d.classList.toggle('open');
-  if (!wasOpen) {
-    // Find exercise name for GIF search
-    const w = workouts.find(x => x.id === currentWorkoutId);
-    if (w) {
-      const ex = w.exercises.find(x => x.id === eid);
-      if (ex) loadGif(eid, ex.name);
-    }
-  }
 }
 
 function toggleDone(eid) {
@@ -1596,122 +1565,63 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-// ===== GIF LOGIC =====
-const gifCache = {}; // eid -> { gifs: [...], idx: 0 }
-
-// Map exercise names to English search terms for ExerciseDB
-const GIF_TERMS = {
-  'Supino inclinado': 'incline bench press',
-  'Crucifixo inclinado': 'incline dumbbell fly',
-  'Desenvolvimento militar': 'military press',
-  'Elevação lateral': 'lateral raise',
-  'Paralelas': 'chest dip',
-  'Prancha abdominal': 'plank',
-  'Vacuum abdominal': 'stomach vacuum',
-  'Agachamento livre': 'barbell squat',
-  'Levantamento terra romeno': 'romanian deadlift',
-  'Leg press': 'leg press',
-  'Afundo': 'lunge',
-  'Hip thrust': 'hip thrust',
-  'Hanging leg raise': 'hanging leg raise',
-  'Barra fixa': 'pull up',
-  'Remada curvada': 'bent over row',
-  'Face pull': 'face pull',
-  'Rosca direta': 'barbell curl',
-  'Rosca martelo': 'hammer curl',
-  'Tríceps corda': 'tricep rope pushdown',
-  'Ab wheel': 'ab wheel rollout',
-  'Desenvolvimento com halter': 'dumbbell shoulder press',
-  'Crucifixo máquina': 'cable fly',
-  'Supino reto': 'bench press',
-  'Farmer walk': 'farmer walk',
-  'Prancha lateral': 'side plank',
-  'Dead bug': 'dead bug',
-  'Glute bridge': 'glute bridge',
+// ===== VIDEO LOGIC =====
+const YT_TERMS = {
+  'supino inclinado': 'incline bench press how to',
+  'crucifixo inclinado': 'incline dumbbell fly how to',
+  'desenvolvimento militar': 'overhead press how to',
+  'elevacao lateral': 'lateral raise how to',
+  'paralelas': 'chest dips how to',
+  'prancha abdominal': 'plank exercise how to',
+  'vacuum abdominal': 'stomach vacuum exercise',
+  'agachamento livre': 'barbell squat how to',
+  'levantamento terra romeno': 'romanian deadlift how to',
+  'leg press': 'leg press machine how to',
+  'afundo': 'lunge exercise how to',
+  'hip thrust': 'hip thrust glutes how to',
+  'hanging leg raise': 'hanging leg raise how to',
+  'barra fixa': 'pull up how to',
+  'remada curvada': 'bent over row how to',
+  'face pull': 'face pull cable how to',
+  'rosca direta': 'barbell curl how to',
+  'rosca martelo': 'hammer curl how to',
+  'triceps corda': 'tricep rope pushdown how to',
+  'ab wheel': 'ab wheel rollout how to',
+  'desenvolvimento com halter': 'dumbbell shoulder press how to',
+  'crucifixo maquina': 'cable chest fly how to',
+  'supino reto': 'flat bench press how to',
+  'farmer walk': 'farmer walk exercise how to',
+  'prancha lateral': 'side plank how to',
+  'dead bug': 'dead bug exercise how to',
+  'glute bridge': 'glute bridge how to',
 };
 
-function getSearchTerm(exName) {
-  for (const [pt, en] of Object.entries(GIF_TERMS)) {
-    if (exName.toLowerCase().includes(pt.toLowerCase())) return en;
+function normalizeStr(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+
+function getYTQuery(exName) {
+  const norm = normalizeStr(exName);
+  for (const [pt, query] of Object.entries(YT_TERMS)) {
+    if (norm.includes(pt)) return query;
   }
-  // Fallback: use the name directly
-  return exName.toLowerCase().replace(/[^\w\s]/g,'').trim();
+  return exName + ' exercise how to';
 }
 
-async function loadGif(eid, exName) {
-  if (gifCache[eid]) { renderGif(eid); return; }
-  const term = getSearchTerm(exName);
-  try {
-    const gifs = await fetchFromWger(term);
-    if (gifs && gifs.length > 0) { gifCache[eid] = { gifs, idx: 0 }; renderGif(eid); return; }
-  } catch {}
-  try {
-    const gifs = await fetchFromGiphy(term);
-    if (gifs && gifs.length > 0) { gifCache[eid] = { gifs, idx: 0 }; renderGif(eid); return; }
-  } catch {}
-  gifCache[eid] = { gifs: [], idx: 0 };
-  showGifFallback(eid, exName);
-}
+const videoLoaded = {};
 
-async function fetchFromWger(term) {
-  const r = await fetch('https://wger.de/api/v2/exercise/search/?term=' + encodeURIComponent(term) + '&language=english&format=json');
-  if (!r.ok) return [];
-  const d = await r.json();
-  const ids = (d.suggestions || []).slice(0,3).map(s => s.data && s.data.base_id).filter(Boolean);
-  const gifs = [];
-  for (const id of ids) {
-    const ir = await fetch('https://wger.de/api/v2/exerciseimage/?exercise_base=' + id + '&format=json');
-    if (!ir.ok) continue;
-    const im = await ir.json();
-    (im.results || []).filter(i => i.image).forEach(i => gifs.push({ url: 'https://wger.de' + i.image, name: term }));
-  }
-  return gifs;
-}
-
-async function fetchFromGiphy(term) {
-  const r = await fetch('https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=' + encodeURIComponent(term + ' exercise') + '&limit=3&rating=g');
-  if (!r.ok) return [];
-  const d = await r.json();
-  return (d.data || []).map(g => ({ url: g.images && g.images.fixed_height && g.images.fixed_height.url, name: g.title })).filter(g => g.url);
-}
-
-function renderGif(eid) {
-  const cache = gifCache[eid];
-  if (!cache || cache.gifs.length === 0) { showGifFallback(eid, ''); return; }
-  const { gifs, idx } = cache;
-  const wrap = document.getElementById('gif-wrap-' + eid);
-  const label = document.getElementById('gif-label-' + eid);
-  const nav = document.getElementById('gif-nav-' + eid);
-  const count = document.getElementById('gif-count-' + eid);
+function loadVideo(eid, exName) {
+  if (videoLoaded[eid]) return;
+  videoLoaded[eid] = true;
+  const wrap = document.getElementById('video-wrap-' + eid);
   if (!wrap) return;
-
-  // Clear loading state
+  const query = getYTQuery(exName);
+  const iframe = document.createElement('iframe');
+  iframe.src = 'https://www.youtube.com/embed?listType=search&list=' + encodeURIComponent(query) + '&autoplay=1&rel=0&modestbranding=1';
+  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+  iframe.allowFullscreen = true;
   wrap.innerHTML = '';
-  const img = document.createElement('img');
-  img.src = gifs[idx].url;
-  img.alt = gifs[idx].name;
-  img.loading = 'lazy';
-  img.onerror = () => showGifFallback(eid, '');
-  wrap.appendChild(img);
-  if (label) label.textContent = gifs[idx].name;
-  if (nav && gifs.length > 1) { nav.style.display = 'flex'; }
-  if (count) count.textContent = `${idx+1} / ${gifs.length}`;
-}
-
-function showGifFallback(eid, exName) {
-  const wrap = document.getElementById('gif-wrap-' + eid);
-  if (!wrap) return;
-  wrap.innerHTML = `<div class="gif-loading" style="position:relative;padding:24px;text-align:center;gap:6px">
-    <div style="font-size:32px">🏋️</div>
-    <div style="font-size:11px;color:var(--text3)">GIF não disponível offline</div>
-  </div>`;
-}
-
-function gifNext(eid) {
-  if (!gifCache[eid]) return;
-  const c = gifCache[eid];
-  c.idx = (c.idx + 1) % c.gifs.length;
-  renderGif(eid);
+  wrap.appendChild(iframe);
 }
 function gifPrev(eid) {
   if (!gifCache[eid]) return;

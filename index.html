@@ -906,7 +906,7 @@
 
 <div class="header">
   <div class="header-logo">TREINO<span>.app</span></div>
-  <div style="position:absolute;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text3);font-family:'Barlow Condensed',sans-serif;top:22px;">v1.5</div>
+  <div style="position:absolute;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text3);font-family:'Barlow Condensed',sans-serif;top:22px;">v1.6</div>
   <div class="header-actions">
     <button class="icon-btn" onclick="openHistoryPage()" title="Histórico">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
@@ -1620,38 +1620,56 @@ function loadGif(eid, exName) {
   if (!wrap) return;
 
   if (!folder) {
-    wrap.innerHTML = '<div class="video-placeholder" style="cursor:default"><div style="font-size:32px">🏋️</div><div class="video-placeholder-label">Sem imagem cadastrada</div></div>';
+    const ytUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(exName + ' como fazer exercicio');
+    wrap.innerHTML = '<div class="video-placeholder" style="cursor:default;gap:12px">' +
+      '<div style="font-size:32px">\u{1F3CB}\uFE0F</div>' +
+      '<div class="video-placeholder-label">Sem imagem cadastrada</div>' +
+      '<div class="video-placeholder-sub">' + exName + '</div>' +
+      '<a href="' + ytUrl + '" target="_blank" rel="noopener" ' +
+      'style="display:inline-flex;align-items:center;gap:8px;background:#ff0000;color:#fff;' +
+      'font-family:\'Barlow Condensed\',sans-serif;font-size:13px;font-weight:800;' +
+      'letter-spacing:2px;text-transform:uppercase;padding:10px 20px;border-radius:24px;' +
+      'text-decoration:none;box-shadow:0 4px 16px rgba(255,0,0,0.4);">\u25B6 Buscar no YouTube</a>' +
+      '</div>';
     return;
   }
 
   gifState[eid] = { folder, frame: 0, loaded: true };
-  renderGifFrames(eid);
+  renderGifFrames(eid, exName);
 }
 
-function renderGifFrames(eid) {
+function renderGifFrames(eid, exName) {
   const { folder } = gifState[eid];
   const wrap = document.getElementById('video-wrap-' + eid);
   if (!wrap) return;
 
   wrap.innerHTML = '';
-  wrap.style.minHeight = '200px';
-  wrap.style.display = 'flex';
-  wrap.style.gap = '4px';
+  wrap.style.cssText = 'min-height:200px;display:flex;flex-direction:column;gap:6px;aspect-ratio:unset;';
 
-  // Show 2 frames side by side like a before/after motion
+  const framesRow = document.createElement('div');
+  framesRow.style.cssText = 'display:flex;gap:4px;width:100%;';
   [0, 1].forEach(f => {
     const img = document.createElement('img');
     img.src = BASE + folder + '/' + f + '.jpg';
-    img.style.cssText = 'width:50%;height:100%;object-fit:cover;border-radius:10px;background:var(--surface2);';
+    img.style.cssText = 'width:50%;object-fit:cover;border-radius:10px;background:var(--surface2);max-height:180px;';
     img.onerror = () => { img.style.display = 'none'; };
-    wrap.appendChild(img);
+    framesRow.appendChild(img);
   });
+  wrap.appendChild(framesRow);
 
   const label = document.createElement('div');
-  label.style.cssText = 'position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10px;color:rgba(255,255,255,0.4);font-family:Barlow Condensed,sans-serif;letter-spacing:1px;text-transform:uppercase;pointer-events:none;';
-  label.textContent = 'Início → Final do movimento';
-  wrap.style.position = 'relative';
+  label.style.cssText = 'text-align:center;font-size:10px;color:rgba(255,255,255,0.35);font-family:\'Barlow Condensed\',sans-serif;letter-spacing:1px;text-transform:uppercase;padding:2px 0;';
+  label.textContent = 'In\u00EDcio \u2192 Final do movimento';
   wrap.appendChild(label);
+
+  const ytUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent((exName || '') + ' como fazer exercicio');
+  const ytBtn = document.createElement('a');
+  ytBtn.href = ytUrl;
+  ytBtn.target = '_blank';
+  ytBtn.rel = 'noopener';
+  ytBtn.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(255,0,0,0.12);color:#ff5555;border:1px solid rgba(255,0,0,0.25);font-family:\'Barlow Condensed\',sans-serif;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:8px 0;border-radius:10px;text-decoration:none;width:100%;';
+  ytBtn.innerHTML = '\u25B6 Ver demonstra\u00E7\u00E3o no YouTube';
+  wrap.appendChild(ytBtn);
 }
 // ===== INIT =====
 renderHome();

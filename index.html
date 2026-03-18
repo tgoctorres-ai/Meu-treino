@@ -906,7 +906,7 @@
 
 <div class="header">
   <div class="header-logo">TREINO<span>.app</span></div>
-  <div style="position:absolute;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text3);font-family:'Barlow Condensed',sans-serif;top:22px;">v1.4</div>
+  <div style="position:absolute;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text3);font-family:'Barlow Condensed',sans-serif;top:22px;">v1.5</div>
   <div class="header-actions">
     <button class="icon-btn" onclick="openHistoryPage()" title="Histórico">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
@@ -1312,9 +1312,9 @@ function renderExerciseList(w) {
       </div>
       <div class="exercise-detail" id="detail-${ex.id}">
         <div class="video-wrap" id="video-wrap-${ex.id}">
-          <div class="video-placeholder" onclick="loadVideo('${ex.id}', this.dataset.name)" data-name="${ex.name}">
+          <div class="video-placeholder" onclick="loadGif('${ex.id}', this.dataset.name)" data-name="${ex.name}">
             <div class="video-play-btn">&#9654;</div>
-            <div class="video-placeholder-label">Ver demonstração</div>
+            <div class="video-placeholder-label">Ver movimento</div>
             <div class="video-placeholder-sub">${ex.name}</div>
           </div>
         </div>
@@ -1565,68 +1565,93 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-// ===== VIDEO LOGIC =====
-// Hardcoded YouTube video IDs - reliable, no API needed
-const YT_IDS = {
-  'supino inclinado':            '2Gy8JCBu0rM',
-  'crucifixo inclinado':         'QNcLnOEDsNw',
-  'desenvolvimento militar':     'B-aVuyhvLHU',
-  'elevacao lateral':            'XPPfnSEATJA',
-  'paralelas':                   'dX_nSOOJIsE',
-  'prancha abdominal':           'ASdvN_XEl_c',
-  'vacuum abdominal':            'bXHMqNOvCN4',
-  'agachamento livre':           'ultWZbUMPL8',
-  'levantamento terra romeno':   'jEy_czb3RKA',
-  'leg press':                   'IZxyjW7MPJQ',
-  'afundo':                      'QOVaHwm-Q6U',
-  'hip thrust':                  'SEdqd1n0cvg',
-  'hanging leg raise':           'Pr1ieGZ5ATQ',
-  'barra fixa':                  'eGo4IYlbE5g',
-  'remada curvada':              'vT2GjY_Umpw',
-  'face pull':                   'HSoHeSjvIdI',
-  'rosca direta':                'ykJmrZ5v0Oo',
-  'rosca martelo':               'TwD-YGVP4Bk',
-  'triceps corda':               'vB5OHsJ3EME',
-  'ab wheel':                    'D-AJyHr4nFU',
-  'desenvolvimento com halter':  'qEwKCR5JCog',
-  'crucifixo maquina':           'pYcpY20QaE8',
-  'supino reto':                 'vcBig73ojpE',
-  'farmer walk':                 'Fkzk_RqlYig',
-  'prancha lateral':             'K-CrEi0ymMg',
-  'dead bug':                    'g_BYB0R-4Ws',
-  'glute bridge':                'OUgsJ8-Vi0E',
+// ===== GIF LOGIC v1.5 - free-exercise-db (no API, no blocks) =====
+const BASE = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
+
+// Map exercise name fragments -> folder name in free-exercise-db
+const EX_MAP = {
+  'supino inclinado':           'Barbell_Incline_Bench_Press_Medium_Grip',
+  'crucifixo inclinado':        'Dumbbell_Incline_Fly',
+  'desenvolvimento militar':    'Barbell_Shoulder_Press',
+  'elevacao lateral':           'Dumbbell_Lateral_Raise',
+  'paralelas':                  'Chest_Dip',
+  'prancha abdominal':          'Elbow_Plank',
+  'vacuum abdominal':           'Standing_Ab_Wheel_Rollout',
+  'agachamento livre':          'Barbell_Full_Squat',
+  'levantamento terra romeno':  'Romanian_Deadlift',
+  'leg press':                  'Leg_Press',
+  'afundo':                     'Barbell_Lunge',
+  'hip thrust':                 'Barbell_Hip_Thrust',
+  'hanging leg raise':          'Hanging_Leg_Raise',
+  'barra fixa':                 'Pull-up',
+  'remada curvada':             'Barbell_Bent_Over_Row',
+  'face pull':                  'Face_Pull',
+  'rosca direta':               'Barbell_Curl',
+  'rosca martelo':              'Hammer_Curl',
+  'triceps corda':              'Triceps_Pushdown_Rope_Attachment',
+  'ab wheel':                   'Ab_Wheel_Rollout',
+  'desenvolvimento com halter': 'Dumbbell_Shoulder_Press',
+  'crucifixo maquina':          'Cable_Fly-Crossovers',
+  'supino reto':                'Barbell_Bench_Press_-_Medium_Grip',
+  'farmer walk':                'Farmers_Walk',
+  'prancha lateral':            'Side_Plank',
+  'dead bug':                   'Dead_Bug',
+  'glute bridge':               'Glute_Bridge',
 };
 
 function normalizeStr(s) {
-  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 }
 
-function getYTId(exName) {
+function getExFolder(exName) {
   const norm = normalizeStr(exName);
-  for (const [pt, id] of Object.entries(YT_IDS)) {
-    if (norm.includes(pt)) return id;
+  for (const [pt, folder] of Object.entries(EX_MAP)) {
+    if (norm.includes(pt)) return folder;
   }
   return null;
 }
 
-const videoLoaded = {};
+const gifState = {}; // eid -> { folder, frame, loaded }
 
-function loadVideo(eid, exName) {
-  if (videoLoaded[eid]) return;
-  videoLoaded[eid] = true;
+function loadGif(eid, exName) {
+  if (gifState[eid] && gifState[eid].loaded) return;
+  const folder = getExFolder(exName);
   const wrap = document.getElementById('video-wrap-' + eid);
   if (!wrap) return;
-  const ytId = getYTId(exName);
-  if (!ytId) {
-    wrap.innerHTML = '<div class="video-placeholder" style="cursor:default"><div style="font-size:32px">🏋️</div><div class="video-placeholder-label">Vídeo não cadastrado</div><div class="video-placeholder-sub">Exercício novo — sem vídeo ainda</div></div>';
+
+  if (!folder) {
+    wrap.innerHTML = '<div class="video-placeholder" style="cursor:default"><div style="font-size:32px">🏋️</div><div class="video-placeholder-label">Sem imagem cadastrada</div></div>';
     return;
   }
-  const iframe = document.createElement('iframe');
-  iframe.src = 'https://www.youtube.com/embed/' + ytId + '?autoplay=1&rel=0&modestbranding=1';
-  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-  iframe.allowFullscreen = true;
+
+  gifState[eid] = { folder, frame: 0, loaded: true };
+  renderGifFrames(eid);
+}
+
+function renderGifFrames(eid) {
+  const { folder } = gifState[eid];
+  const wrap = document.getElementById('video-wrap-' + eid);
+  if (!wrap) return;
+
   wrap.innerHTML = '';
-  wrap.appendChild(iframe);
+  wrap.style.minHeight = '200px';
+  wrap.style.display = 'flex';
+  wrap.style.gap = '4px';
+
+  // Show 2 frames side by side like a before/after motion
+  [0, 1].forEach(f => {
+    const img = document.createElement('img');
+    img.src = BASE + folder + '/' + f + '.jpg';
+    img.style.cssText = 'width:50%;height:100%;object-fit:cover;border-radius:10px;background:var(--surface2);';
+    img.onerror = () => { img.style.display = 'none'; };
+    wrap.appendChild(img);
+  });
+
+  const label = document.createElement('div');
+  label.style.cssText = 'position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10px;color:rgba(255,255,255,0.4);font-family:Barlow Condensed,sans-serif;letter-spacing:1px;text-transform:uppercase;pointer-events:none;';
+  label.textContent = 'Início → Final do movimento';
+  wrap.style.position = 'relative';
+  wrap.appendChild(label);
 }
 // ===== INIT =====
 renderHome();

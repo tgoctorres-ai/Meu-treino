@@ -3,285 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roteiro Itália Roma e Florença</title>
+    <title>Roteiro Itália: Nápoles, Paestum e Roma</title>
     <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1552832230-c0197dd311b5?q=80&w=1000&auto=format&fit=crop') center/cover;
-            color: white;
-            text-align: center;
-            padding: 60px 20px;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 2.5em;
-            letter-spacing: 1px;
-        }
-        header p {
-            font-size: 1.2em;
-            margin-top: 10px;
-            font-weight: 300;
-        }
-        .container {
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-        .day-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
-            overflow: hidden;
-        }
-        .day-header {
-            background-color: #d35400; /* Cor para Roma */
-            color: white;
-            padding: 15px 20px;
-            font-size: 1.3em;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .day-header.florence {
-            background-color: #8e44ad; /* Cor para Florença */
-        }
-        .day-content {
-            padding: 20px;
-        }
-        .activity {
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        .activity:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-        .time {
-            display: inline-block;
-            background: #eee;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 10px;
-        }
-        .title {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 8px;
-        }
-        .desc {
-            line-height: 1.5;
-            color: #666;
-            margin-bottom: 15px;
-        }
-        .map-btn {
-            display: inline-block;
-            background-color: #2980b9;
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            font-size: 0.9em;
-            transition: background-color 0.3s;
-        }
-        .map-btn:hover {
-            background-color: #1c5980;
-        }
-        .icon {
-            margin-right: 5px;
-        }
-        .tips {
-            background: #e8f4f8;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-            border-left: 5px solid #3498db;
-        }
-        .tips h3 {
-            margin-top: 0;
-            color: #2980b9;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 0; }
+        header { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?auto=format&fit=crop&q=80&w=1000') center/cover; color: white; text-align: center; padding: 50px 20px; }
+        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 25px; overflow: hidden; }
+        .card-header { padding: 15px 20px; font-weight: bold; color: white; display: flex; justify-content: space-between; }
+        .bg-naples { background-color: #e67e22; }
+        .bg-paestum { background-color: #27ae60; }
+        .bg-rome { background-color: #c0392b; }
+        .content { padding: 20px; }
+        .hotel-box { background: #f9f9f9; border-left: 4px solid #333; padding: 15px; margin-bottom: 20px; font-size: 0.95em; }
+        .transport { background: #e8f4f8; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; font-weight: 500; font-size: 0.9em; border-left: 4px solid #3498db; }
+        .activity { margin-bottom: 15px; line-height: 1.6; }
+        .map-link { display: inline-block; margin-top: 10px; color: #2980b9; text-decoration: none; font-weight: bold; }
+        .map-link:hover { text-decoration: underline; }
+        h3 { margin-top: 0; color: #2c3e50; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Itália 🇮🇹</h1>
-        <p>Roma e Florença | 22/04 a 28/04</p>
-    </header>
+<header>
+    <h1>Roteiro Itália 2026 🇮🇹</h1>
+    <p>22 de Abril - 28 de Abril | Casal Low Cost</p>
+</header>
 
-    <div class="container">
-        
-        <div class="day-card">
-            <div class="day-header">
-                <span>Dia 1: 22/04 (Quarta)</span>
-                <span>Roma</span>
+<div class="container">
+
+    <div class="card">
+        <div class="card-header bg-naples">
+            <span>22/04 a 24/04</span>
+            <span>NÁPOLES</span>
+        </div>
+        <div class="content">
+            <div class="hotel-box">
+                <strong>🏨 Hotel: Historical Center</strong><br>
+                Piazzetta Salvatore Trinchese 2, 80139 Nápoles<br>
+                <a href="https://www.google.com/maps/search/?api=1&query=Piazzetta+Salvatore+Trinchese+2,+80139+Napoli" target="_blank" class="map-link">📍 Ver no Google Maps</a>
             </div>
-            <div class="day-content">
-                <div class="activity">
-                    <span class="time">10h15 - Tarde</span>
-                    <div class="title">Chegada e Explorar o Pigneto</div>
-                    <div class="desc">Voo chega às 10h15. Após fazerem o check-in na hospedagem, fujam do óbvio e almocem no Pigneto, o reduto hipster da cidade, cheio de arte urbana e fatias de pizza baratas.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Via+del+Pigneto+Roma" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
-                <div class="activity">
-                    <span class="time">Noite</span>
-                    <div class="title">Noitada em Trastevere</div>
-                    <div class="desc">O clássico boêmio. Perfeito para encontrar a pessoa que os aguarda. Ruas cheias de jovens, música, street food e cerveja na mão. Peçam um Trapizzino para jantar gastando pouco.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Piazza+di+Santa+Maria+in+Trastevere+Roma" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
+            
+            <div class="transport">
+                🚆 <strong>Como chegar:</strong> Do aeroporto FCO, pegue o Leonardo Express para Roma Termini. De lá, trem de alta velocidade para Napoli Centrale. No metrô, Linha 1 até 'Duomo' ou 'Museo'.
+            </div>
+
+            <div class="activity">
+                <h3>Vibe Urbana e Gastronomia</h3>
+                <ul>
+                    <li><strong>Centro Histórico:</strong> Explore a Spaccanapoli e Via dei Tribunali a pé. Comida de rua é a chave: pizza frita e pizza "a portafoglio" (€3).</li>
+                    <li><strong>Piazza Bellini:</strong> Ponto de encontro jovem. Peça um drink barato e sente nos degraus das ruínas para observar o movimento.</li>
+                    <li><strong>Lungomare:</strong> Caminhada gratuita à beira-mar ao pôr do sol com vista para o Vesúvio.</li>
+                </ul>
             </div>
         </div>
-
-        <div class="day-card">
-            <div class="day-header">
-                <span>Dia 2: 23/04 (Quinta)</span>
-                <span>Roma</span>
-            </div>
-            <div class="day-content">
-                <div class="activity">
-                    <span class="time">Tarde</span>
-                    <div class="title">Pôr do Sol no Gianicolo</div>
-                    <div class="desc">Comprem algumas cervejas ou um vinho no supermercado e subam a colina caminhando para a melhor vista panorâmica gratuita da cidade, cercados de outros jovens e sem a vibe pesada de museu.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Passeggiata+del+Gianicolo+Roma" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
-                <div class="activity">
-                    <span class="time">Noite</span>
-                    <div class="title">Jantar em Testaccio</div>
-                    <div class="desc">Bairro extremamente autêntico e fora da rota principal de turismo. Ótimo para comer uma massa tradicional (Carbonara ou Cacio e Pepe) pagando um preço justo.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Piazza+di+S.+Maria+Liberatrice+Roma" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="day-card">
-            <div class="day-header florence">
-                <span>Dia 3: 24/04 (Sexta)</span>
-                <span>Florença</span>
-            </div>
-            <div class="day-content">
-                <div class="activity">
-                    <span class="time">Manhã / Tarde</span>
-                    <div class="title">Trem para Firenze e Vibe no Oltrarno</div>
-                    <div class="desc">Peguem o trem de alta velocidade (Italo ou Trenitalia). Chegando lá, atravessem o rio Arno. O bairro Oltrarno ferve de estúdios independentes, arte de rua e praças movimentadas.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Piazza+Santo+Spirito+Firenze" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
-                <div class="activity">
-                    <span class="time">Noite</span>
-                    <div class="title">Aperitivo na Praça Santo Spirito</div>
-                    <div class="desc">Fiquem pela região, comprem algo nos mercadinhos locais e sentem nos degraus da igreja como os jovens fiorentinos fazem antes de curtir os bares ao redor.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Basilica+di+Santo+Spirito+Firenze" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="day-card">
-            <div class="day-header florence">
-                <span>Dia 4: 25/04 (Sábado)</span>
-                <span>Florença</span>
-            </div>
-            <div class="day-content">
-                <div class="activity">
-                    <span class="time">Tarde</span>
-                    <div class="title">Feriado e Piazzale Michelangelo</div>
-                    <div class="desc">Hoje é Dia da Libertação (feriado), então aproveitem espaços abertos. Comprem um lanche e subam a praça para ver o pôr do sol clássico de cima. Geralmente rola música ao vivo.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Piazzale+Michelangelo+Firenze" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
-                <div class="activity">
-                    <span class="time">Noite</span>
-                    <div class="title">Manifattura Tabacchi</div>
-                    <div class="desc">Fica um pouco fora do centro, mas é imperdível. Uma antiga fábrica de tabaco convertida em um complexo cultural super moderno, com bares, eventos abertos e muita gente jovem.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Manifattura+Tabacchi+Firenze" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="day-card">
-            <div class="day-header">
-                <span>Dia 5: 26/04 (Domingo)</span>
-                <span>Florença / Roma</span>
-            </div>
-            <div class="day-content">
-                <div class="activity">
-                    <span class="time">Manhã</span>
-                    <div class="title">Mercato Centrale (Firenze)</div>
-                    <div class="desc">Dêem uma volta no andar de cima para comer algo rápido e curtir a arquitetura industrial antes de pegar o trem de volta para Roma.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Mercato+Centrale+Firenze" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
-                <div class="activity">
-                    <span class="time">Noite</span>
-                    <div class="title">Retorno e Rione Monti (Roma)</div>
-                    <div class="desc">De volta a Roma, curtam a última noite na cidade no Rione Monti. É charmoso, cheio de brechós vintage e tem ótimos bares com preços justos.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Piazza+della+Madonna+dei+Monti+Roma" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="day-card">
-            <div class="day-header">
-                <span>Dia 6: 27/04 (Segunda)</span>
-                <span>Roma</span>
-            </div>
-            <div class="day-content">
-                <div class="activity">
-                    <span class="time">Tarde</span>
-                    <div class="title">Ostiense e Gazometro</div>
-                    <div class="desc">Conheçam a área industrial de Roma. Vejam os murais gigantes de street art e a enorme estrutura metálica do Gazometro. Cenário bem urbano e cru.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Via+Ostiense+Roma" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
-                <div class="activity">
-                    <span class="time">Noite</span>
-                    <div class="title">Despedida em San Lorenzo</div>
-                    <div class="desc">Bairro universitário raiz. É onde os estudantes se reúnem. A cerveja é a mais barata de Roma, a pizza é boa e o clima é totalmente descontraído para fechar a viagem.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Piazza+dell'Immacolata+Roma" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="day-card">
-            <div class="day-header">
-                <span>Dia 7: 28/04 (Terça)</span>
-                <span>Embarque p/ Brasil =(</span>
-            </div>
-            <div class="day-content">
-                <div class="activity">
-                    <span class="time">08h00</span>
-                    <div class="title">Partida para Termini</div>
-                    <div class="desc">Sair da hospedagem e seguir para a Estação Roma Termini para pegar o trem expresso 'Leonardo Express'.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Roma+Termini" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
-                <div class="activity">
-                    <span class="time">12h15</span>
-                    <div class="title">Voo de Volta</div>
-                    <div class="desc">O Leonardo Express garante a chegada ao aeroporto (FCO) a tempo das 3 horas de antecedência exigidas.</div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Aeroporto+Fiumicino+FCO" target="_blank" class="map-btn">📍 Abrir no Google Maps</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="tips">
-            <h3>💡 Dicas Express</h3>
-            <ul>
-                <li><strong>Água:</strong> Levem garrafinhas. A água das fontes públicas na rua (nasoni) é grátis e limpa.</li>
-                <li><strong>Trem:</strong> Comprem os bilhetes Roma-Firenze com antecedência nos apps da <strong>Italo</strong> ou <strong>Trenitalia</strong>.</li>
-                <li><strong>Refeições:</strong> Almoço em balcões ou comida de rua (fatias de pizza) é a melhor tática <em>low cost</em> na Itália.</li>
-            </ul>
-        </div>
-
     </div>
+
+    <div class="card">
+        <div class="card-header bg-paestum">
+            <span>24/04 a 26/04</span>
+            <span>PAESTUM</span>
+        </div>
+        <div class="content">
+            <div class="hotel-box">
+                <strong>🏨 Hotel: Mandetta</strong><br>
+                Via Torre di Mare 30, 84047 Paestum<br>
+                <a href="https://www.google.com/maps/search/?api=1&query=Via+Torre+di+Mare+30,+84047+Paestum" target="_blank" class="map-link">📍 Ver no Google Maps</a>
+            </div>
+
+            <div class="transport">
+                🚆 <strong>Como chegar:</strong> Vá para Napoli Centrale e pegue o trem Regional em direção a Paestum (~1h20). O hotel fica a cerca de 2km da estação (caminhada plana ou táxi curto).
+            </div>
+
+            <div class="activity">
+                <h3>Praia e Buffalo Mozzarella</h3>
+                <ul>
+                    <li><strong>Relaxe:</strong> O hotel é de frente para o mar. Aproveite a praia e o clima mediterrâneo mais tranquilo.</li>
+                    <li><strong>Templos Gregos:</strong> Caminhe pela estrada principal para ver os templos gigantes por fora (grátis) sem precisar de tour histórico.</li>
+                    <li><strong>Rota da Mozzarella:</strong> Visite uma queijaria local (como a Barlotti) para provar a autêntica mozzarella de búfala direto do produtor.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-rome">
+            <span>26/04 a 28/04</span>
+            <span>ROMA</span>
+        </div>
+        <div class="content">
+            <div class="hotel-box">
+                <strong>🏨 Hotel: Rome Orange Inn</strong><br>
+                Via Buonarroti 39, Estação Termini, 00185 Roma<br>
+                <a href="https://www.google.com/maps/search/?api=1&query=Via+Buonarroti+39,+00185+Roma" target="_blank" class="map-link">📍 Ver no Google Maps</a>
+            </div>
+
+            <div class="transport">
+                🚆 <strong>Como chegar:</strong> Trem Regional de Paestum para Salerno ou Nápoles, depois trem de alta velocidade para Roma Termini. O hotel fica a 10 min a pé da estação.
+            </div>
+
+            <div class="activity">
+                <h3>Despedida em Grande Estilo</h3>
+                <ul>
+                    <li><strong>Rione Monti:</strong> A poucos minutos a pé do hotel. Bairro jovem com praças, brechós e bares de vinho com mesas na calçada.</li>
+                    <li><strong>Roma Noturna:</strong> Veja o Coliseu e a Fontana di Trevi à noite. É grátis, mais vazio e a iluminação é espetacular.</li>
+                    <li><strong>Mercato Centrale:</strong> Fica dentro da estação Termini. Ótima opção jovem e moderna para jantar bem antes de ir para o aeroporto.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="border: 2px dashed #7f8c8d;">
+        <div class="content">
+            <h3>🛫 28/04: Embarque de Volta</h3>
+            <p><strong>08h30:</strong> Saia do hotel a pé para a Estação Termini.<br>
+            <strong>09h00:</strong> Pegue o Leonardo Express para o Aeroporto Fiumicino.<br>
+            <strong>12h15:</strong> Voo de volta para o Brasil.</p>
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>
